@@ -1,0 +1,12 @@
+push 5
+push 10
+mul
+push 27
+add
+pop rax
+push rax
+push rax
+mul
+sqrt
+out
+hlt

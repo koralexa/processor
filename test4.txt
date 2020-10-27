@@ -1,0 +1,12 @@
+push 5
+push -1
+sub
+push 0
+mul
+push 7
+add
+push 1783.9
+sdhkwdwkd
+sqrt
+out
+hlt
