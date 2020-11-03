@@ -7,6 +7,7 @@ Commands available are:
 
 Code | Command | Result
 ------ | ------------ | --------
+0 | hlt | stop execution
 1 | in | get float number from stdin
 2 | out | output float number from the top of stack
 3, 4 | push | push number or register to the stack
