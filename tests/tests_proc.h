@@ -1,22 +1,20 @@
 //
-//  disassembler.h
+//  tests_proc.h
 //  processor
 //
 //  Created by Alexandra Korabulina on 27.10.2020.
 //
 
-#ifndef disassembler_h
-#define disassembler_h
+#ifndef __tests_proc_h__
+#define __tests_proc_h__
 
 //--------------------------------------------------------------------------------
 
-#include <stdio.h>
-#include <string.h>
-#include <stdlib.h>
+void Test1_proc();
 
-//--------------------------------------------------------------------------------
+void Test2_proc();
 
-int Disassembly(const char * filename);
+void Test3_proc();
 
 //--------------------------------------------------------------------------------
 

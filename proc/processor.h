@@ -37,6 +37,8 @@ int ReadProgram(const char * filename, Processor * p);
 
 int NextCommand(Processor * p);
 
+double * CaseRegister(Processor * p, int command);
+
 int In(Processor * p);       // 1
 
 int Out(Processor * p);      // 2
@@ -56,6 +58,8 @@ int Mul(Processor * p);      // 8
 int Div(Processor * p);      // 9
 
 int Sqrt(Processor * p);     // 10
+
+int Jmp(Processor * p);      // 11
 
 //--------------------------------------------------------------------------------
 

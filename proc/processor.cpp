@@ -5,10 +5,12 @@
 //  Created by Alexandra Korabulina on 27.10.2020.
 //
 
-#include "processor.h"
 
-#include "../assembler/assembler.h"
-#include "../getword/getword.h"
+#ifdef DEBUG
+#include "../tests/tests_proc.h"
+#endif
+
+#include "processor.h"
 
 #include <string.h>
 #include <stdlib.h>
@@ -65,30 +67,18 @@ int ExecuteProgram(const char * filename, Processor * p) {
 //!
 //! @return 0 in case operation finished successfully, 1 otherwise
 int ReadProgram(const char * filename, Processor * p) {
-    if (Assembly(filename) != 0) {
-        return 1;
-    }
-    char * new_filename = (char *)calloc(sizeof(char), strlen(filename) + 5);
-    new_filename[0] = 'a';
-    new_filename[1] = 's';
-    new_filename[2] = 'm';
-    new_filename[3] = '_';
-    new_filename[4] = '\0';
-    strcat(new_filename, filename);
-    FILE * f = fopen(new_filename, "r");
-    char * word = GetNextWord(f);
+    FILE * f = fopen(filename, "rb");
     long long count = 0;
     p->program = (double *)calloc(sizeof(double), 100);
     long long prog_size = 100;
-    while (word != NULL) {
+    double command = 0.0;
+    while (fread(&command, sizeof(double), 1, f) != 0) {
         if (count == prog_size) {
             prog_size = prog_size * 2;
             p->program = (double *)realloc(p->program, prog_size);
         }
-        p->program[count] = atof(word);
+        p->program[count] = command;
         count++;
-        free(word);
-        word = GetNextWord(f);
     }
     fclose(f);
     return 0;
@@ -168,10 +158,39 @@ int NextCommand(Processor * p) {
                 return -1;
             }
             break;
+        case 11:
+            p->rip++;
+            if (Jmp(p) != 0) {
+                return -1;
+            }
+            break;
         default:
             return -1;
     }
     return 1;
+}
+
+//--------------------------------------------------------------------------------
+
+//! Chooses register of processor depending on it's number
+//!
+//! @param [in] p pointer to the processor
+//! @param [in] command register number
+//!
+//! @return pointer to the register in case it exists, null pointer otherwise
+double * CaseRegister(Processor * p, int command) {
+    switch (command) {
+        case 0:
+            return (double *)&p->rax;
+        case 1:
+            return (double *)&p->rbx;
+        case 2:
+            return (double *)&p->rcx;
+        case 3:
+            return (double *)&p->rdx;
+        default:
+            return NULL;
+    }
 }
 
 //--------------------------------------------------------------------------------
@@ -219,41 +238,16 @@ int Out(Processor * p) {
 //!
 //! @note increases rip for the next command
 int Push_reg(Processor * p) {
-    switch((int)p->program[p->rip]) {
-        case 0:
-            if (StackPush(&(p->stack), p->rax) != 0) {
-                return 1;
-            } else {
-                p->rip++;
-                return 0;
-            }
-            break;
-        case 1:
-            if (StackPush(&(p->stack), p->rbx) != 0) {
-                return 1;
-            } else {
-                p->rip++;
-                return 0;
-            }
-            break;
-        case 2:
-            if (StackPush(&(p->stack), p->rcx) != 0) {
-                return 1;
-            } else {
-                p->rip++;
-                return 0;
-            }
-            break;
-        case 3:
-            if (StackPush(&(p->stack), p->rdx) != 0) {
-                return 1;
-            } else {
-                p->rip++;
-                return 0;
-            }
-            break;
-        default:
+    double * reg = CaseRegister(p, (int)p->program[p->rip]);
+    if (reg != NULL) {
+        if (StackPush(&(p->stack), *reg) != 0) {
             return 1;
+        } else {
+            p->rip++;
+            return 0;
+        }
+    } else {
+        return 1;
     }
 }
 
@@ -285,41 +279,16 @@ int Push_num(Processor * p) {
 //!
 //! @note increases rip for the next command
 int Pop(Processor * p) {
-    switch((int)p->program[p->rip]) {
-        case 0:
-            if (StackPop(&(p->stack), &(p->rax)) != 0) {
-                return 1;
-            } else {
-                p->rip++;
-                return 0;
-            }
-            break;
-        case 1:
-            if (StackPop(&(p->stack), &(p->rbx)) != 0) {
-                return 1;
-            } else {
-                p->rip++;
-                return 0;
-            }
-            break;
-        case 2:
-            if (StackPop(&(p->stack), &(p->rcx)) != 0) {
-                return 1;
-            } else {
-                p->rip++;
-                return 0;
-            }
-            break;
-        case 3:
-            if (StackPop(&(p->stack), &(p->rdx)) != 0) {
-                return 1;
-            } else {
-                p->rip++;
-                return 0;
-            }
-            break;
-        default:
+    double * reg = CaseRegister(p, (int)p->program[p->rip]);
+    if (reg != NULL) {
+        if (StackPop(&(p->stack), reg) != 0) {
             return 1;
+        } else {
+            p->rip++;
+            return 0;
+        }
+    } else {
+        return 1;
     }
 }
 
@@ -441,3 +410,39 @@ int Sqrt(Processor * p) {
 }
 
 //--------------------------------------------------------------------------------
+
+//! Jimps to the label
+//!
+//! @param [in] p pointer to the processor
+//!
+//! @return 0 in case operation finished successfully, 1 otherwise
+int Jmp(Processor * p) {
+    if (p->program[p->rip] < 0) {
+        return 1;
+    }
+    p->rip = (long long)p->program[p->rip];
+    return 0;
+}
+
+//--------------------------------------------------------------------------------
+
+int main(int argc, const char * argv[]) {
+#ifdef DEBUG
+    (void)argc;
+    (void)argv;
+    Test1_proc();
+    Test2_proc();
+    Test3_proc();
+    return 0;
+#else
+    if (argc != 2) {
+        std::cout << "Wrong parameters, you must provide filename (and only filename) as command line argument." << std::endl;
+        return 0;
+    }
+    Processor p;
+    if (ExecuteProgram(argv[1], &p) == 0) {
+        std::cout << "Successfull execution." << std::endl;
+    }
+    return 0;
+#endif
+}

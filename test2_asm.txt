@@ -1,0 +1,13 @@
+push 5
+push -1
+sub
+push 0
+jmp this_is_label
+mul
+push 7
+add
+push 1783.9
+this_is_label:
+sqrt
+out
+hlt

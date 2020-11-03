@@ -8,9 +8,11 @@
 #ifndef getword_h
 #define getword_h
 
+#include <stdio.h>
+
 //--------------------------------------------------------------------------------
 
-char * GetNextWord(FILE * f);
+int GetNextWord(FILE * f, char * word);
 
 //--------------------------------------------------------------------------------
 

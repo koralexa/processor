@@ -1,26 +1,20 @@
 //
-//  tests.h
+//  tests_asm.h
 //  processor
 //
 //  Created by Alexandra Korabulina on 27.10.2020.
 //
 
-#ifndef tests_h
-#define tests_h
+#ifndef __tests_asm_h__
+#define __tests_asm_h__
 
 //--------------------------------------------------------------------------------
 
-void Test1();
+void Test1_asm();
 
-void Test2();
+void Test2_asm();
 
-void Test3();
-
-void Test4();
-
-void Test5();
-
-void Test6();
+void Test3_asm();
 
 //--------------------------------------------------------------------------------
 

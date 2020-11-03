@@ -1,22 +1,27 @@
 //
-//  assembler.h
+//  disassembler.h
 //  processor
 //
 //  Created by Alexandra Korabulina on 27.10.2020.
 //
 
-#ifndef assembler_h
-#define assembler_h
-
-//--------------------------------------------------------------------------------
+#ifndef disassembler_h
+#define disassembler_h
 
 #include <stdio.h>
-#include <string.h>
-#include <stdlib.h>
 
 //--------------------------------------------------------------------------------
 
-int Assembly(const char * filename);
+struct Label {
+    char * name;
+    double addr;
+};
+
+//--------------------------------------------------------------------------------
+
+void FreeAll(FILE * f1, FILE * f2, struct Label * labels, unsigned long labels_num);
+
+int Disassembly(const char * filename);
 
 //--------------------------------------------------------------------------------
 

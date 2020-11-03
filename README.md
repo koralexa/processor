@@ -3,39 +3,26 @@ This project is created to provide the ability to execute calculations with the 
 
 ## Description
 
-You must provide a .txt file with your program text.
-
-The programm will be converted into maschine codes and then executed.
-
 Commands available are:
 
-in (get float number from stdin)
-
-out (output float number from the top of stack)
-
-hlt (stop executing)
-
-add (add two numbers from the top of stack)
-
-sub (subtract one value from another)
-
-mul (multiply two numbers)
-
-div (divide one number by another)
-
-sqrt (take square root from the top value)
-
-push (push number or register to the stack)
-
-pop (pop number from stack to some register)
+Code | Command | Result
+------ | ------------ | --------
+1 | in | get float number from stdin
+2 | out | output float number from the top of stack
+3, 4 | push | push number or register to the stack
+5 | pop | pop number from stack to some register
+6 | sub | subtract one number from another
+7 | add | add two numbers from the top of stack
+8 | mul | multiply two numbers
+9 | div | divide one number by another
+10 | sqrt | take square root from the top value
+11 | jmp | jump to a label
 
 There are four double registers in processor provided: rax, rbx, rcx and rdx.
 
-You can see an example of program which calculates discriminat of quadratic equation in example.txt file.
-
-Ability to disassembly program is also provided (disassmbler.cpp and disassembler.h).
-
-There is a simple example of using processor in main.cpp.
+You can write a program in .txt file, then assembly it with ./assembler and execute it with ./processor.
+Ability to disassembly the program back is also provided (use ./disassembler).
+You can see examples of programs in Test files.
 
 ## Getting Started
 
@@ -49,26 +36,49 @@ There is a simple example of using processor in main.cpp.
 ### Executing program
 
 * Go to the project folder through your terminal.
-* To execute example run
+* To compile release versions of all programms run
 ```
 make
 ```
-* Then run
+* You can also compile all programms separate with
 ```
-./main
+make processor
+make assembler
+make disassembler
+```
+* To assembly your .txt programm run
+```
+./assembler <your_prog.txt>
+```
+* To disassembly a program run
+```
+./disassembler <your_prog>
+```
+* To execute assembled program run
+```
+./processor <your_prog>
 ```
 
-* To execute example  in debug mode run
+* To get debug versions of all programs run
 ```
 make debug
 ```
-* Then run
+* You can also compile all programms in debug version separate with
 ```
-./main
+make processor_debug
+make assembler_debug
+make disassembler_debug
 ```
-
-* To delete executable files run
+* To run tests for processor run
 ```
-make clean
+./processor_debug
+```
+* To run tests for assembler run
+```
+./assembler_debug
+```
+* To run tests for disassembler run
+```
+./disassembler_debug
 ```
 
